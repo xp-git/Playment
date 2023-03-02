@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ap-gateway
+
+#默认使用7210端口
+server:
+  port: 9020

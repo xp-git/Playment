@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.j3code.admire.mapper.OrderMapper">
+
+    <resultMap id="BaseResultMap" type="cn.j3code.admire.po.Order">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="commodityId" column="commodity_id" jdbcType="BIGINT"/>
+        <result property="orderNumber" column="order_number" jdbcType="VARCHAR"/>
+        <result property="money" column="money" jdbcType="DECIMAL"/>
+        <result property="payType" column="pay_type" jdbcType="INTEGER"/>
+        <result property="payStatus" column="pay_status" jdbcType="INTEGER"/>
+        <result property="expireTime" column="expire_time" jdbcType="TIMESTAMP"/>
+        <result property="qrCode" column="qr_code" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,user_id,commodity_id,
+        order_number,money,pay_type,
+        pay_status,expire_time,qr_code,
+        create_time,creator,update_time,
+        updater
+    </sql>
+    <select id="page" resultType="cn.j3code.admire.controller.api.web.vo.OrderVO">
+        select c.*
+        from (SELECT a.*,
+        b.name AS commodity_name
+        FROM ap_order a
+        LEFT JOIN ap_commodity b ON a.commodity_id = b.id
+        <where>
+            <if test="query.userId != null">
+                AND a.user_id = #{query.userId}
+            </if>
+            <if test="query.commodityId != null">
+                AND a.commodity_id = #{query.commodityId}
+            </if>
+            <if test="query.orderNumber != null and query.orderNumber != ''">
+                AND a.order_number = #{query.orderNumber}
+            </if>
+            <if test="query.payStatus != null  ">
+                AND a.pay_status = #{query.payStatus}
+            </if>
+        </where>
+            order by a.create_time desc
+        ) c
+        <where>
+            <if test="query.commodityName != null and query.commodityName != ''">
+                AND c.commodity_name like concat('%',#{query.commodityName},'%')
+            </if>
+        </where>
+    </select>
+    <select id="getBy" resultType="cn.j3code.admire.controller.api.web.vo.OrderVO">
+        SELECT a.*,
+               b.name AS commodity_name
+        FROM ap_order a
+                 LEFT JOIN ap_commodity b ON a.commodity_id = b.id
+        WHERE a.commodity_id = #{commodityId}
+          AND a.user_id = #{userId}
+    </select>
+</mapper>

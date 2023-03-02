@@ -1,0 +1,28 @@
+ld:
+#  host: ENC(0Gw7KGEuD9tbgcAIq3UUyP9YEc8OH0TuqJ0dis9PqMH/iodGfKoPu3Qpjc2w9cuj)
+  host: ENC(/bpzPbgIFuEtutypvc8lWpXTYaQyX5z5DrdQ5WFLGGwz9pwpRsB7Nq5uQVFu/s5/)
+  mysql-port: 3306
+  nacos-port: ENC(BcdcabRwBBA7uZjeYhsUiQSBRR0jbaFGStYUBW6XfS7v2wPlGMu/A5pycGkXjoLv)
+  redis-port: ENC(e3Mj+r0/c3lyB5fED16jYA06v8PRlB3reoHgWvmvbAVQUBUQA9q/sSvkTuTfbPc1)
+  druid-password: ENC(dt7eo1i+3pVrhVI+cJicCa0AsP1mhq9wbwRJ7vOAt+TQtbLZr1Sq+oSLHmmLosz3)
+  druid-url-mapper: "/ap-druid/*"
+  mq-host1: ENC(3BCpEOcT+EQydXwv3rGAABquKt4CgGP3J7+FU9FmRp9/m5N/raQmNQYzuiA7N5T8)
+  mq-port1: ENC(ci0eGG90xENVUh5GQyelub0dQaDkJqNg19k/2LARa6J/icVgzo4s0atqag0xWDyl)
+  mq-host2: ENC(mUF8TbTk79WcSyG05+eoIrqUSGvQgWFGnKXMO8g2u/XkKumOK4tht2rEc9bzzqCM)
+  mq-port2: ENC(d6wkpbfJrJfmkVQD7uFoMIKCvtzC8gtA+RDhcl0Yb2k+rxzgk4L+fBC+fU5AU33J)
+#nacos
+nacos:
+  #dev
+#  namespace: e3b7306b-3a51-439c-8b4c-45d46f9e3d32
+  #prod
+  namespace: edf88515-a6a4-4e64-86f5-0a92ffd74e01
+#database
+DB_HOST: ${ld.host}:${ld.mysql-port}
+DB_NAME: admire-platform
+DB_USERNAME: root
+DB_PASSWORD: ENC(dt7eo1i+3pVrhVI+cJicCa0AsP1mhq9wbwRJ7vOAt+TQtbLZr1Sq+oSLHmmLosz3)
+REDIS_PASSWORD: ENC(dt7eo1i+3pVrhVI+cJicCa0AsP1mhq9wbwRJ7vOAt+TQtbLZr1Sq+oSLHmmLosz3)
+
+
+MQ_NAME_SERVER: ${ld.mq-host1}:${ld.mq-port1};${ld.mq-host2}:${ld.mq-port2}
+MQ_GROUP: admire_platform

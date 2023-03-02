@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: ap-admire
+
+#默认使用9022端口
+server:
+  port: 9022

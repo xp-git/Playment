@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.j3code.admire.mapper.CommodityMapper">
+
+    <resultMap id="BaseResultMap" type="cn.j3code.admire.po.Commodity">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="price" column="price" jdbcType="DECIMAL"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="tagId" column="tag_id" jdbcType="BIGINT"/>
+            <result property="descriptionUrl" column="description_url" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="buyNumber" column="buy_number" jdbcType="INTEGER"/>
+            <result property="lookNumber" column="look_number" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="creator" column="creator" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,price,
+        type,tag_id,description_url,
+        content,buy_number,look_number,
+        create_time,creator,update_time,
+        updater
+    </sql>
+
+    <sql id="pageSelect">
+        a.id,
+            a.name,
+            a.price,
+            a.type,
+            a.tag_id,
+            b.name AS tag_name,
+            a.buy_number,
+            a.look_number,
+            a.create_time
+    </sql>
+
+    <sql id="pageWhere">
+        <if test="query.name != null and query.name != ''">
+            AND a.name LIKE concat('%', #{query.name}, '%')
+        </if>
+        <if test="query.type != null">
+            AND a.type = #{query.type}
+        </if>
+    </sql>
+
+    <select id="page" resultType="cn.j3code.admire.controller.api.web.vo.CommodityVO">
+        SELECT
+            <include refid="pageSelect"/>
+        FROM ap_commodity a
+        LEFT JOIN ap_tag b ON a.tag_id = b.id
+        <where>
+            <include refid="pageWhere"/>
+        </where>
+        ORDER BY a.buy_number DESC, a.create_time DESC
+    </select>
+    <select id="one" resultType="cn.j3code.admire.controller.api.web.vo.CommodityVO">
+        SELECT a.*, b.name AS tag_name
+        FROM ap_commodity a
+        LEFT JOIN ap_tag b ON a.tag_id = b.id
+        where a.id = #{id}
+    </select>
+    <select id="getLogCountByCommodityIdAndUserId" resultType="java.lang.Integer">
+        select count(*)
+        from ap_user_commodity
+        where user_id = #{userId}
+          and commodity_id = #{commodityId}
+    </select>
+    <select id="pagePay" resultType="cn.j3code.admire.controller.api.web.vo.CommodityVO">
+        SELECT
+            <include refid="pageSelect"/>
+        FROM ap_user_commodity c
+                 LEFT JOIN ap_commodity a ON c.commodity_id = a.id
+                 LEFT JOIN ap_tag b ON a.tag_id = b.id
+        WHERE c.user_id = #{query.userId}
+        <include refid="pageWhere"/>
+        ORDER BY a.buy_number DESC, a.create_time DESC
+    </select>
+    <select id="pageNotPay" resultType="cn.j3code.admire.controller.api.web.vo.CommodityVO">
+        select c.* from (
+            SELECT
+            <include refid="pageSelect"/>
+            FROM ap_commodity a
+            LEFT JOIN ap_tag b ON a.tag_id = b.id
+            <where>
+                <include refid="pageWhere"/>
+            </where>
+            ORDER BY a.buy_number DESC, a.create_time DESC
+        ) c
+        where c.id not in (
+        select commodity_id from ap_user_commodity where user_id = #{query.userId}
+        )
+
+    </select>
+    <select id="getCommodityBuyNumber" resultType="cn.j3code.admire.po.Commodity">
+        SELECT
+            a.commodity_id as id,
+            COUNT(*) AS buy_number
+        FROM ap_user_commodity a
+        GROUP BY a.commodity_id
+    </select>
+</mapper>

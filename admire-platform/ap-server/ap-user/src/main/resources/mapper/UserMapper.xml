@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.j3code.user.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="cn.j3code.user.po.User">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="orderNumber" column="order_number" jdbcType="VARCHAR"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="headPicture" column="head_picture" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="TINYINT"/>
+        <result property="signature" column="signature" jdbcType="VARCHAR"/>
+        <result property="registerType" column="register_type" jdbcType="INTEGER"/>
+        <result property="tagId" column="tag_id" jdbcType="BIGINT"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="creator" column="creator" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="updater" column="updater" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,username,password,
+        order_number,nickname,head_picture,
+        sex,signature,register_type,
+        tag_id,create_time,creator,
+        update_time,updater
+    </sql>
+    <select id="getMinTagByType" resultType="java.lang.Long">
+        select `id`
+        from ap_tag
+        where `type` = #{type}
+        order by `sort` asc limit 1
+    </select>
+    <select id="getUser" resultType="cn.j3code.user.controller.api.web.vo.UserVO">
+        select a.*,
+               b.name as tag_name
+        from ap_user a
+                 left join ap_tag b on a.tag_id = b.id
+        where a.id = #{userId}
+    </select>
+</mapper>

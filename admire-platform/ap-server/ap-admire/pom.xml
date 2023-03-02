@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>cn.j3code</groupId>
+        <artifactId>ap-server</artifactId>
+        <version>AP.2023.02.03</version>
+    </parent>
+    <packaging>jar</packaging>
+    <artifactId>ap-admire</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.34.0.ALL</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!--包名-->
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- Springboot打包插件。使用 mvn package 进行打包。 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.5.3</version>
+                <configuration>
+                    <!-- main方法所在类。 -->
+                    <mainClass>cn.j3code.admire.ApAdmireApplication</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <!--编译配置文件-->
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+</project>
